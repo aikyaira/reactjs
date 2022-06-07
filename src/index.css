@@ -11,3 +11,9 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+.Comment{
+  width: 20%;
+}
+.Comment-date{
+  color: #BBBBBB;
+}
