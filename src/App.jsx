@@ -1,29 +1,38 @@
 import React, { useState, useEffect } from "react";
 import "./App.css";
+import Form from "./Form";
 import Comment from "./Comment";
-import Menu from "./Menu";
+import Chat from "./Chat";
+import {
+  Grid,
+  Container,
+
+} from "@mui/material";
+import { ThemeProvider, makeStyles } from "@material-ui/core";
+import theme from "./theme";
+
+const useStyles = makeStyles({
+  container: {
+    padding: "6em 0",
+  },
+
+});
 
 function App() {
+  const classes = useStyles();
+
   const initialState = [];
   const [messageList, setMessageList] = useState(initialState);
   const [author, setAuthor] = useState("");
   const [message, setMessage] = useState("");
-  //const ref = useRef(null);
-  const updateMessageList = (e) => {
-    e.preventDefault();
-    let now = new Date();
-    setMessageList([
-      ...messageList,
-      {
-        issupport: false,
-        datetime: now.toLocaleTimeString(),
-        author: author,
-        message: message,
-      },
-    ]);
-  };
-  useEffect(() => {
+  const chats = [
+    { id: 1, name: "Поддержка" },
+    { id: 2, name: "Вопросы" },
+    { id: 3, name: "Пожелания" },
+    { id: 4, name: "Предложения" },
+  ];
 
+  useEffect(() => {
     if (messageList.length !== 0) {
       if (messageList[messageList.length - 1].issupport === false) {
         setTimeout(() => {
@@ -43,50 +52,20 @@ function App() {
     }
   }, [messageList]);
   return (
-    <div className="App">
-      <Menu />
-      <div className="container">
-        <h1 className="my-5">Добро пожаловать.</h1>
-        <p>
-          Lorem ipsum dolor sit amet consectetur, adipisicing elit. Ratione
-          maiores labore quidem sequi ipsa, ullam fuga, nostrum aspernatur at
-          eaque tempora ipsam officia molestiae, dicta voluptates doloribus
-          necessitatibus temporibus voluptatum. Lorem ipsum dolor sit amet
-          consectetur adipisicing elit. Accusantium cupiditate ratione ea vitae
-          voluptatibus, alias illum corrupti nisi vero iure ad consequuntur
-          mollitia nostrum dolorum accusamus eos aliquam magnam porro.
-        </p>
-        <h3 className="fw-bold my-5">Чат с поддержкой:</h3>
-        <div className="row">
-          <form className="col-4" onSubmit={updateMessageList}>
-            <div className="mb-3 text-start">
-              <label for="nameField" className="form-label">
-                Ваше имя
-              </label>
-              <input
-                type="text"
-                className="form-control"
-                id="nameField"
-                placeholder="Иван Иванов"
-                onChange={(e) => setAuthor(e.target.value)}
-              />
-            </div>
-            <div className="mb-3 text-start">
-              <label for="messageField" className="form-label">
-                Коментарий
-              </label>
-              <textarea
-                className="form-control"
-                id="messageField"
-                rows="3"
-                onChange={(e) => setMessage(e.target.value)}
-              ></textarea>
-            </div>
-            <button type="submit" className="btn btn-primary mb-3">
-              Отправить
-            </button>
-          </form>
-          <div className="col-8">
+    <ThemeProvider theme={theme}>
+      <Container fixed className={classes.container}>
+        <Grid container spacing={4}>
+          <Grid item xs={5}>
+            <Form
+              messageList={messageList}
+              setMessageList={setMessageList}
+              message={message}
+              setMessage={setMessage}
+              author={author}
+              setAuthor={setAuthor}
+            />
+          </Grid>
+          <Grid item xs={4}>
             {messageList.map((message, i) => {
               return (
                 <Comment
@@ -98,10 +77,13 @@ function App() {
                 />
               );
             })}
-          </div>
-        </div>
-      </div>
-    </div>
+          </Grid>
+          <Grid item xs={3}>
+            <Chat chats={chats}/>
+          </Grid>
+        </Grid>
+      </Container>
+    </ThemeProvider>
   );
 }
 
